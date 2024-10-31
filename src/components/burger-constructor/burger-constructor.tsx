@@ -39,7 +39,7 @@ export const BurgerConstructor: FC = () => {
       (constructorItems.bun && constructorItems.ingredients.length > 0) ||
       orderRequest
     ) {
-      orderModalData?._id;
+      !isAuthenticated;
     }
   };
   const closeOrderModal = () => {};
