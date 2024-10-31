@@ -1,13 +1,14 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TConstructorIngredient, TOrder } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { getConstructState } from '../../services/slices/burger-constructor';
-import { useSelector } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
+
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = null;
-  const isAuthenticated = false;
   const ingredients = useSelector((state) => state.construct);
   const constructorItems = {
     bun: ingredients.bun,
@@ -30,16 +31,18 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (
-      (constructorItems.bun && constructorItems.ingredients.length > 0) ||
-      !orderRequest
+      !isAuthenticated &&
+      constructorItems.bun &&
+      constructorItems.ingredients.length > 0
+    ) {
+      setOrderData(orderModalData);
+      orderModalData;
+    } else if (
+      isAuthenticated &&
+      constructorItems.bun &&
+      constructorItems.ingredients.length > 0
     ) {
       navigate('/login', { replace: true });
-      console.log(orderModalData?._id);
-    } else if (
-      (constructorItems.bun && constructorItems.ingredients.length > 0) ||
-      orderRequest
-    ) {
-      !isAuthenticated;
     }
   };
   const closeOrderModal = () => {};
@@ -64,3 +67,8 @@ export const BurgerConstructor: FC = () => {
   );
 };
 export default BurgerConstructor;
+
+function setOrderData(orderModalData: TOrder | null) {
+  alert('Вылез заказ');
+  throw new Error('Function not implemented.');
+}
