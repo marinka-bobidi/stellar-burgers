@@ -2,22 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 import { getIngredientsApi } from '@api';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 export interface TinitialState {
   isLoading: boolean;
   ingredients: TIngredient[];
   error: null | string;
   isModalOpened: boolean;
-  isInit: boolean;
 }
 
 export const initialState: TinitialState = {
   isLoading: false,
   ingredients: [],
   error: null,
-  isModalOpened: true,
-  isInit: false
+  isModalOpened: false
 };
 
 export const ingredientThunk = createAsyncThunk(
@@ -29,9 +26,6 @@ export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {
-    init(state) {
-      state.isInit = true;
-    },
     openModal(state) {
       state.isModalOpened = true;
     },
@@ -61,7 +55,7 @@ export const ingredientsSlice = createSlice({
   }
 });
 
-export default ingredientsSlice.reducer;
 export const { ingredientSelector, selectIsModalOpened } =
   ingredientsSlice.selectors;
-export const { openModal, closeModal, init } = ingredientsSlice.actions;
+export const { openModal, closeModal } = ingredientsSlice.actions;
+export default ingredientsSlice.reducer;

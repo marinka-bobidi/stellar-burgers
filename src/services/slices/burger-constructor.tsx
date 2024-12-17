@@ -3,7 +3,7 @@ import { TConstructorIngredient, TIngredient } from '@utils-types';
 
 type TConstructorState = {
   ingredients: TConstructorIngredient[];
-  bun: TConstructorIngredient[] | null;
+  bun: TConstructorIngredient | null;
   priceBun: number;
   price: number;
 };
@@ -38,12 +38,19 @@ export const constructorSlice = createSlice({
         (value) => value.id !== payload.id
       );
       state.price -= payload.price;
+    },
+    clearConstructor(state) {
+      state.ingredients = [];
+      state.priceBun = 0;
+      state.bun = null;
+      state.price = 0;
     }
   },
   selectors: {
     getConstructState: (state) => state
   }
 });
-export const { addIngredient, removeIngredient } = constructorSlice.actions;
+export const { addIngredient, removeIngredient, clearConstructor } =
+  constructorSlice.actions;
 export const { getConstructState } = constructorSlice.selectors;
 export default constructorSlice.reducer;
