@@ -11,25 +11,24 @@ import {
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { AppHeader, OrderInfo, IngredientDetails } from '@components';
 import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  useNavigate,
-  useNavigation
-} from 'react-router-dom';
+  AppHeader,
+  OrderInfo,
+  IngredientDetails,
+  BurgerConstructor
+} from '@components';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
 import { Modal } from '../modal';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { ingredientThunk, closeModal } from '../../services/slices/ingredient';
-import { getOrdersThunk } from '../../services/slices/orders';
+
 const App = () => {
+  console.log(process.env.BURGER_API_URL);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(ingredientThunk());
-    dispatch(getOrdersThunk());
   }, [dispatch]);
   return (
     <Router>
@@ -98,7 +97,12 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Ingredient Details' onClose={() => {}}>
+              <Modal
+                title='Ingredient Details'
+                onClose={() => {
+                  dispatch(closeModal());
+                }}
+              >
                 <IngredientDetails />
               </Modal>
             }
@@ -108,12 +112,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal
-                  title='Order Information'
-                  onClose={() => {
-                    dispatch(closeModal());
-                  }}
-                >
+                <Modal title='Order Information' onClose={() => {}}>
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>

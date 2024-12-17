@@ -1,64 +1,51 @@
-import { FC, useEffect, useMemo, useState } from 'react';
-import { TConstructorIngredient } from '@utils-types';
-import { BurgerConstructorUI } from '@ui';
-import { useDispatch, useSelector } from '../../services/store';
-import { orderClear, orderThunk } from '../../services/slices/order';
-import { closeModal, openModal } from '../../services/slices/ingredient';
+import React, { FC, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { clearConstructor } from '../../services/slices/burger-constructor';
+import { TConstructorIngredient, TOrder } from '@utils-types';
+import { BurgerConstructorUI } from '@ui';
+import { getConstructState } from '../../services/slices/burger-constructor';
+import { useDispatch, useSelector } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.authentication.user);
+  const user = null;
   const ingredients = useSelector((state) => state.construct);
-  const isModalOpen = useSelector((state) => state.ingredients.isModalOpened);
-  const orderRequest = useSelector((state) => state.order.loading);
-  const buffer = useSelector((state) => state.order);
   const constructorItems = {
     bun: ingredients.bun,
     price: ingredients.price,
     bunPrice: ingredients.priceBun,
     ingredients: ingredients.ingredients
   };
-
-  let orderModalData = null;
-  if (buffer._id == '' || !isModalOpen) {
-    orderModalData = null;
-  } else {
-    orderModalData = buffer;
-  }
-  const [ingredients_array, set_ing_array] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (ingredients_array.length > 0) {
-      dispatch(orderThunk(ingredients_array));
-    }
-  }, [ingredients_array, dispatch]);
+  const orderRequest = isAuthenticated;
+  const orderModalData: TOrder | null = isAuthenticated
+    ? {
+        _id: 'kkdkd',
+        status: 'completed',
+        name: 'Order Name',
+        createdAt: '2022-12-01T00:00:00Z',
+        updatedAt: '2022-12-01T01:00:00Z',
+        number: 6,
+        ingredients: []
+      }
+    : null;
 
   const onOrderClick = () => {
-    if (user.name !== '' && user.email !== '') {
-      const ing: string[] = [];
-      if (
-        !isModalOpen &&
-        constructorItems.bun &&
-        constructorItems.ingredients.length > 0
-      ) {
-        dispatch(openModal());
-        constructorItems.ingredients.forEach((element) => {
-          ing.push(element._id);
-        });
-        ing.push(constructorItems.bun._id);
-        set_ing_array(ing);
-        dispatch(clearConstructor());
-      }
-    } else {
-      navigate('/login');
+    if (
+      !isAuthenticated &&
+      constructorItems.bun &&
+      constructorItems.ingredients.length > 0
+    ) {
+      setOrderData(orderModalData);
+      orderModalData;
+    } else if (
+      isAuthenticated &&
+      constructorItems.bun &&
+      constructorItems.ingredients.length > 0
+    ) {
+      navigate('/login', { replace: true });
     }
   };
-  const closeOrderModal = () => {
-    dispatch(closeModal());
-  };
+  const closeOrderModal = () => {};
   const price = useMemo(
     () =>
       (constructorItems.bun ? constructorItems.bunPrice * 2 : 0) +
@@ -80,3 +67,8 @@ export const BurgerConstructor: FC = () => {
   );
 };
 export default BurgerConstructor;
+
+function setOrderData(orderModalData: TOrder | null) {
+  alert('Вылез заказ');
+  throw new Error('Function not implemented.');
+}
