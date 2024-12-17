@@ -6,8 +6,7 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 
-import { rootReducerCombine } from './slices/rootReducer';
-const rootReducer = rootReducerCombine;
+const rootReducer = () => {}; // Заменить на импорт настоящего редьюсера
 
 const store = configureStore({
   reducer: rootReducer,
