@@ -1,7 +1,6 @@
 import { ConstructorPage } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { AppHeader } from '@components';
 
