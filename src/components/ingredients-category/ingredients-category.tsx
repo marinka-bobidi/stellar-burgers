@@ -7,7 +7,7 @@ export const IngredientsCategory = forwardRef<
   HTMLUListElement,
   TIngredientsCategoryProps
 >(({ title, titleRef, ingredients }, ref) => {
-  /** DONE: взять переменную из стора */
+  /** TODO: взять переменную из стора */
   const burgerConstructor = {
     bun: {
       _id: ''
@@ -25,6 +25,7 @@ export const IngredientsCategory = forwardRef<
     if (bun) counters[bun._id] = 2;
     return counters;
   }, [burgerConstructor]);
+
   return (
     <IngredientsCategoryUI
       title={title}

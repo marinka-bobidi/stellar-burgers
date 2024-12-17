@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import { TModalProps } from './type';
 import { ModalUI } from '@ui';
-import { useSelector } from '../../services/store';
 
 const modalRoot = document.getElementById('modals');
 
@@ -18,6 +17,7 @@ export const Modal: FC<TModalProps> = memo(({ title, onClose, children }) => {
       document.removeEventListener('keydown', handleEsc);
     };
   }, [onClose]);
+
   return ReactDOM.createPortal(
     <ModalUI title={title} onClose={onClose}>
       {children}
