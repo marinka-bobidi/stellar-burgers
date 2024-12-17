@@ -1,48 +1,74 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { orderBurgerApi } from '@api';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { orderBurgerApi, registerUserApi, TRegisterData } from '@api';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { TIngredient } from '@utils-types';
-interface initialState {
-  order: TOrder | null;
-  name: string | null;
-  isLoading: boolean;
+
+interface TinitialState extends TOrder {
+  _id: string;
+  status: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  number: number;
+  ingredients: string[];
+  loading: boolean;
   error: string | null;
 }
 
-export const initialState: initialState = {
-  order: null,
-  name: null,
-  isLoading: false,
+const initialState: TinitialState = {
+  _id: '',
+  status: '',
+  name: '',
+  createdAt: '',
+  updatedAt: '',
+  number: 0,
+  ingredients: [],
+  loading: false,
   error: null
 };
 
-export const fetchNewOrder = createAsyncThunk(
-  'order/new/fetch',
-  orderBurgerApi
+export const orderThunk = createAsyncThunk('id/order', async (data: string[]) =>
+  orderBurgerApi(data)
 );
 
-const orderSlice = createSlice({
-  name: 'orders',
+export const orderSlice = createSlice({
+  name: 'order',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
+  reducers: {
+    orderClear(state) {
+      state._id = '';
+      state.createdAt = '';
+      state.error = '';
+      state.ingredients = [];
+      state.updatedAt = '';
+      state.loading = false;
+      state.error = null;
+      state.name = '';
+      state.status = '';
+      state.number = 0;
+    }
+  },
+  extraReducers(builder) {
     builder
-      .addCase(fetchNewOrder.pending, (state) => {
-        state.isLoading = true;
+      .addCase(orderThunk.pending, (state) => {
+        state.loading = true;
         state.error = null;
       })
-      .addCase(fetchNewOrder.rejected, (state, { error }) => {
-        state.isLoading = false;
+      .addCase(orderThunk.rejected, (state, { error }) => {
+        state.loading = true;
         state.error = error.message as string;
       })
-      .addCase(fetchNewOrder.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
+      .addCase(orderThunk.fulfilled, (state, { payload }) => {
+        state.loading = false;
         state.error = null;
-        state.order = payload.order;
-        state.name = payload.name;
+        state._id = payload.order._id;
+        state.status = payload.order.status;
+        state.name = payload.order.name;
+        state.createdAt = payload.order.createdAt;
+        state.updatedAt = payload.order.updatedAt;
+        state.number = payload.order.number;
+        state.ingredients = payload.order.ingredients;
       });
   }
 });
-
+export const { orderClear } = orderSlice.actions;
 export default orderSlice.reducer;
