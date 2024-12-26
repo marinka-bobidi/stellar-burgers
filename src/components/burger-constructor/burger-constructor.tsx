@@ -6,6 +6,7 @@ import { orderClear, orderThunk } from '../../services/slices/order';
 import { closeModal, openModal } from '../../services/slices/ingredient';
 import { useNavigate } from 'react-router-dom';
 import { clearConstructor } from '../../services/slices/burger-constructor';
+import { refreshTokenThunk } from '../../services/slices/auth';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -29,7 +30,6 @@ export const BurgerConstructor: FC = () => {
     orderModalData = buffer;
   }
   const [ingredients_array, set_ing_array] = useState<string[]>([]);
-
   useEffect(() => {
     if (ingredients_array.length > 0) {
       dispatch(orderThunk(ingredients_array));
@@ -39,11 +39,8 @@ export const BurgerConstructor: FC = () => {
   const onOrderClick = () => {
     if (user.name !== '' && user.email !== '') {
       const ing: string[] = [];
-      if (
-        !isModalOpen &&
-        constructorItems.bun &&
-        constructorItems.ingredients.length > 0
-      ) {
+      if (constructorItems.bun && constructorItems.ingredients.length > 0) {
+        dispatch(refreshTokenThunk());
         dispatch(openModal());
         constructorItems.ingredients.forEach((element) => {
           ing.push(element._id);
@@ -58,6 +55,7 @@ export const BurgerConstructor: FC = () => {
   };
   const closeOrderModal = () => {
     dispatch(closeModal());
+    dispatch(orderClear());
   };
   const price = useMemo(
     () =>

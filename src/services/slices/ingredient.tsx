@@ -14,7 +14,7 @@ export const initialState: TinitialState = {
   isLoading: false,
   ingredients: [],
   error: null,
-  isModalOpened: false
+  isModalOpened: true
 };
 
 export const ingredientThunk = createAsyncThunk(

@@ -6,9 +6,12 @@ import {
   loginUserApi,
   TLoginData,
   updateUserApi,
-  logoutApi
+  logoutApi,
+  refreshToken,
+  getUserApi
 } from '@api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { setCookie } from '../../utils/cookie';
 
 interface TinitialState {
   user: TUser;
@@ -48,6 +51,12 @@ export const updateUserThunk = createAsyncThunk(
 export const userLogoutThunk = createAsyncThunk('user/logout', async () => {
   logoutApi();
 });
+export const refreshTokenThunk = createAsyncThunk('token/refresh', async () =>
+  refreshToken()
+);
+export const getUserApiThunk = createAsyncThunk('user/get', async () =>
+  getUserApi()
+);
 
 export const authSlice = createSlice({
   name: 'authentication',
@@ -85,6 +94,7 @@ export const authSlice = createSlice({
         state.user = payload.user;
         state.acessToken = payload.accessToken;
         state.refreshToken = payload.refreshToken;
+        setCookie('accessToken', payload.accessToken);
         state.isAuthenticated = true;
         state.loadingSuccess = true;
       })
@@ -115,6 +125,34 @@ export const authSlice = createSlice({
         state.error = null;
         state.user.email = '';
         state.user.name = '';
+      })
+      .addCase(refreshTokenThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(refreshTokenThunk.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message as string;
+      })
+      .addCase(refreshTokenThunk.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.refreshToken = payload.refreshToken;
+        state.acessToken = payload.accessToken;
+        setCookie('accessToken', payload.accessToken);
+      })
+      .addCase(getUserApiThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserApiThunk.rejected, (state, { error }) => {
+        state.loading = false;
+        state.error = error.message as string;
+      })
+      .addCase(getUserApiThunk.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.user = payload.user;
       });
   },
   selectors: {

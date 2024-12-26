@@ -25,11 +25,20 @@ import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { ingredientThunk, closeModal } from '../../services/slices/ingredient';
 import { getOrdersThunk } from '../../services/slices/orders';
+import {
+  loginThunk,
+  refreshTokenThunk,
+  getUserApiThunk,
+  updateUserThunk
+} from '../../services/slices/auth';
+import { getCookie, setCookie } from '../../utils/cookie';
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(ingredientThunk());
     dispatch(getOrdersThunk());
+    dispatch(refreshTokenThunk());
+    dispatch(getUserApiThunk());
   }, [dispatch]);
   return (
     <Router>
@@ -41,7 +50,7 @@ const App = () => {
           <Route
             path='/login'
             element={
-              <ProtectedRoute>
+              <ProtectedRoute anonymous>
                 <Login />
               </ProtectedRoute>
             }
@@ -98,7 +107,12 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Ingredient Details' onClose={() => {}}>
+              <Modal
+                title='Ingredient Details'
+                onClose={() => {
+                  dispatch(closeModal());
+                }}
+              >
                 <IngredientDetails />
               </Modal>
             }
