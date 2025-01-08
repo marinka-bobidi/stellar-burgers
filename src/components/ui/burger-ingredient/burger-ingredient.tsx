@@ -20,7 +20,7 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
       dispatch(openModal());
     };
     return (
-      <li className={styles.container}>
+      <li className={styles.container} data-type={ingredient.type}>
         <Link
           className={styles.article}
           to={`/ingredients/${_id}`}
