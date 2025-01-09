@@ -13,7 +13,7 @@ interface TinitialState {
   userOrders: TOrder[];
 }
 
-const initialState: TinitialState = {
+export const initialState: TinitialState = {
   sucess: false,
   orders: [],
   total: 0,
@@ -47,7 +47,7 @@ export const orderSlice = createSlice({
         state.error = null;
       })
       .addCase(getOrdersThunk.rejected, (state, { error }) => {
-        state.loading = true;
+        state.loading = false;
         state.error = error.message as string;
       })
       .addCase(getOrdersThunk.fulfilled, (state, { payload }) => {
@@ -63,11 +63,11 @@ export const orderSlice = createSlice({
         state.error = null;
       })
       .addCase(getUserOrderThunk.rejected, (state, { error }) => {
-        state.loading = true;
+        state.loading = false;
         state.error = error.message as string;
       })
       .addCase(getUserOrderThunk.fulfilled, (state, { payload }) => {
-        state.loading = true;
+        state.loading = false;
         state.error = null;
         state.userOrders = payload;
       });

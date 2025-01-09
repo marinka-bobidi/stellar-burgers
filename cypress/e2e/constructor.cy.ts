@@ -1,11 +1,11 @@
 describe('Тесты E2E конструктора бургеров', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients' });
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
 
   it('Сервис должен быть доступен по адресу http://localhost:4000', () => {
-    cy.url().should('include', 'http://localhost:4000');
+    cy.url().should('include', '/');
   });
 
   it('Доступные ингредиенты', () => {

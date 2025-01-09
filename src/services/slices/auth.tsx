@@ -85,7 +85,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginThunk.rejected, (state, { error }) => {
         state.loading = false;
-        state.error = error as string;
+        state.error = error.message as string;
         state.loadingSuccess = false;
       })
       .addCase(loginThunk.fulfilled, (state, { payload }) => {
@@ -104,7 +104,7 @@ export const authSlice = createSlice({
       })
       .addCase(updateUserThunk.rejected, (state, { error }) => {
         state.loading = false;
-        state.error = error as string;
+        state.error = error.message as string;
       })
       .addCase(updateUserThunk.fulfilled, (state, { payload }) => {
         state.loading = false;

@@ -7,7 +7,7 @@ import {
 } from 'react-redux';
 
 import { rootReducerCombine } from './slices/rootReducer';
-const rootReducer = rootReducerCombine;
+export const rootReducer = rootReducerCombine;
 
 const store = configureStore({
   reducer: rootReducer,

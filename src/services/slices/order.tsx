@@ -14,7 +14,7 @@ interface TinitialState extends TOrder {
   error: string | null;
 }
 
-const initialState: TinitialState = {
+export const initialState: TinitialState = {
   _id: '',
   status: '',
   name: '',
@@ -54,7 +54,7 @@ export const orderSlice = createSlice({
         state.error = null;
       })
       .addCase(orderThunk.rejected, (state, { error }) => {
-        state.loading = true;
+        state.loading = false;
         state.error = error.message as string;
       })
       .addCase(orderThunk.fulfilled, (state, { payload }) => {
